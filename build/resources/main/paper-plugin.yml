@@ -1,0 +1,15 @@
+name: HeavenTPA
+version: 1.0.0
+main: com.vitalis.tpa.HeavenTPA
+api-version: "1.21"
+author: Vitalis
+description: "Heaven teleport requests with chat accept/decline buttons. Purpur/Paper 1.21.11."
+depend: []
+softdepend: [Essentials]
+permissions:
+  heaventpa.use:
+    description: "Send and answer teleport requests."
+    default: true
+  heaventpa.admin:
+    description: "Reload config."
+    default: op

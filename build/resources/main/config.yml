@@ -1,0 +1,8 @@
+# HeavenTPA v1.0.0 - Purpur/Paper 1.21.11
+general:
+  prefix: '<gradient:#7AD9FF:#FFD76A>[ТП]</gradient> <gray>'
+  sounds: true
+  # seconds before a request expires
+  expire-seconds: 60
+  # teleport to exact spot (true) or a safe spot nearby (false)
+  exact: true

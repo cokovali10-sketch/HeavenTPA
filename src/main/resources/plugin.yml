@@ -10,9 +10,6 @@ commands:
   tpa:
     description: "Ask to teleport to a player."
     usage: "/tpa <ник>"
-  tpahere:
-    description: "Ask a player to teleport to you."
-    usage: "/tpahere <ник>"
   tpaccept:
     description: "Accept a teleport request."
     usage: "/tpaccept [ник]"

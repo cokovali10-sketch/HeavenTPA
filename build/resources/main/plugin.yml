@@ -1,5 +1,5 @@
 name: HeavenTPA
-version: 1.0.0
+version: 1.0.1
 main: com.vitalis.tpa.HeavenTPA
 api-version: "1.21"
 author: Vitalis
@@ -10,9 +10,6 @@ commands:
   tpa:
     description: "Ask to teleport to a player."
     usage: "/tpa <ник>"
-  tpahere:
-    description: "Ask a player to teleport to you."
-    usage: "/tpahere <ник>"
   tpaccept:
     description: "Accept a teleport request."
     usage: "/tpaccept [ник]"

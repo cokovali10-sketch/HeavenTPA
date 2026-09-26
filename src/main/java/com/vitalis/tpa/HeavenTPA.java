@@ -21,8 +21,6 @@ public class HeavenTPA extends JavaPlugin implements Listener {
         try {
             registerCommand("tpa", "Ask to teleport to a player",
                     java.util.List.of(), new TpaCommand(this, "tpa"));
-            registerCommand("tpahere", "Ask a player to teleport to you",
-                    java.util.List.of(), new TpaCommand(this, "tpahere"));
             registerCommand("tpaccept", "Accept a teleport request",
                     java.util.List.of("tpyes"), new TpaCommand(this, "tpaccept"));
             registerCommand("tpdeny", "Decline a teleport request",

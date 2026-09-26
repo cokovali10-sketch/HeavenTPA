@@ -52,17 +52,16 @@ public class TpaCommand implements BasicCommand {
             return;
         }
         switch (mode) {
-            case "tpa" -> send(p, args, Kind.TO);
-            case "tpahere" -> send(p, args, Kind.HERE);
+            case "tpa" -> send(p, args);
             case "tpaccept" -> answer(p, args, true);
             case "tpdeny" -> answer(p, args, false);
             default -> p.sendMessage(color("&cНеизвестная команда."));
         }
     }
 
-    private void send(Player p, String[] args, Kind kind) {
+    private void send(Player p, String[] args) {
         if (args.length < 1) {
-            p.sendMessage(color("&eИспользование: &f/" + (kind == Kind.TO ? "tpa" : "tpahere") + " <ник>"));
+            p.sendMessage(color("&eИспользование: &f/tpa <ник>"));
             return;
         }
         Player t = Bukkit.getPlayerExact(args[0]);
@@ -75,15 +74,12 @@ public class TpaCommand implements BasicCommand {
             return;
         }
         long now = System.currentTimeMillis();
-        plugin.requests().add(t.getUniqueId(), p.getUniqueId(), p.getName(), kind,
+        plugin.requests().add(t.getUniqueId(), p.getUniqueId(), p.getName(), Kind.TO,
                 now, plugin.cfg().expireSeconds * 1000L);
         p.sendMessage(color("&aЗапрос отправлен &f" + t.getName()
                 + " &7(сгорит через " + plugin.cfg().expireSeconds + " сек)"));
         // target message with buttons
-        String what = kind == Kind.TO
-                ? "&f" + p.getName() + " &7хочет телепортироваться &fк тебе"
-                : "&f" + p.getName() + " &7просит тебя телепортироваться &fк нему";
-        t.sendMessage(color(what));
+        t.sendMessage(color("&f" + p.getName() + " &7хочет телепортироваться &fк тебе"));
         Component row = Component.empty()
                 .append(btn("&a[Принять]", "/tpaccept " + p.getName(), "&7Клик — принять"))
                 .append(Component.text("   "))
@@ -115,20 +111,17 @@ public class TpaCommand implements BasicCommand {
             }
             return;
         }
-        // teleport on main thread (commands already run there)
-        boolean toTarget = r.kind == Kind.TO;
-        Player who = toTarget ? from : p;
-        Player dest = toTarget ? p : from;
+        // teleport the requester to the accepter (commands already run on main thread)
         try {
-            who.teleport(dest.getLocation());
-            who.sendMessage(color("&aТелепортация!"));
+            from.teleport(p.getLocation());
+            from.sendMessage(color("&aТелепортация!"));
             if (plugin.cfg().sounds) {
-                who.playSound(who.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 0.8f, 1.2f);
-                dest.playSound(dest.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 0.8f, 1.2f);
+                from.playSound(from.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 0.8f, 1.2f);
+                p.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 0.8f, 1.2f);
             }
-            (toTarget ? p : from).sendMessage(color("&f" + who.getName() + " &aтелепортировался."));
+            p.sendMessage(color("&f" + from.getName() + " &aтелепортировался."));
         } catch (Exception e) {
-            who.sendMessage(color("&cНе вышло телепортироваться."));
+            from.sendMessage(color("&cНе вышло телепортироваться."));
             plugin.getLogger().warning("Teleport failed: " + e.getMessage());
         }
     }
@@ -150,7 +143,7 @@ public class TpaCommand implements BasicCommand {
         if (args.length <= 1) {
             String q = args.length == 1 ? args[0].toLowerCase(Locale.ROOT) : "";
             List<String> out = new ArrayList<>();
-            if (mode.equals("tpa") || mode.equals("tpahere")) {
+            if (mode.equals("tpa")) {
                 for (Player o : Bukkit.getOnlinePlayers()) {
                     if (o.getName().toLowerCase(Locale.ROOT).startsWith(q)
                             && !o.equals(stack.getSender())) out.add(o.getName());
